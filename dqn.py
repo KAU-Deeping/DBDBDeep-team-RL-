@@ -27,14 +27,24 @@ class DQN:
 # Create Deep Q Network
     def _build_network(self, h_size=16, l_rate=0.001) -> None:
 
-        with tf.variable_scope(self.net_name):
+        with tf.variable_scope(self.net_name, reuse=False):
 
             # Initialize X with input_size(from envs)
             self._X = tf.placeholder(tf.float32, [None, self.input_size], name="input_x")
             net = self._X
 
             # Make hidden layer using activation(function) with h_size
-            net = tf.layers.dense(net, h_size, tf.nn.relu)
+
+            if self.activation == "tf.nn.relu":
+                net = tf.layers.dense(net, h_size, tf.nn.relu, reuse=tf.AUTO_REUSE)
+
+            elif self.activation == "tf.nn.tanh":
+                net = tf.layers.dense(net, h_size, tf.nn.tanh)
+
+            else:
+                print("Invaild activation function")
+                return
+
             net = tf.layers.dense(net, self.output_size)
             self._Qpred = net
 
@@ -46,6 +56,8 @@ class DQN:
 
             optimizer = tf.train.AdamOptimizer(learning_rate=l_rate)
             self._train = optimizer.minimize(self._loss)
+
+
 
     def predict(self, state: np.ndarray) -> np.ndarray:
 

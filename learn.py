@@ -25,7 +25,6 @@ class model:
 
         # Constants defining our neural network
         self.INPUT_SIZE = self.env.observation_space.shape[0]
-        print(self.INPUT_SIZE)
         self.OUTPUT_SIZE = self.env.action_space.n
 
         # Initialize model's params
