@@ -52,6 +52,7 @@ class DQN:
         x = np.reshape(state, [-1, self.input_size])
         return self.session.run(self._Qpred, feed_dict={self._X: x})
 
+    # Update array
     def update(self, x_stack: np.ndarray, y_stack: np.ndarray) -> list:
 
         feed = {
