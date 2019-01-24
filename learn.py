@@ -116,10 +116,10 @@ class model:
         # store the previous observations in replay memory
         replay_buffer = deque(maxlen=self.REPLAY_MEMORY)
 
-        last_100_game_reward = deque(maxlen=100)
+        last_10_game_reward = deque(maxlen=10)
 
         with tf.Session() as sess:
-            mainDQN = dqn.DQN(sess, self.INPUT_SIZE, self.OUTPUT_SIZE, self.h_size, self.l_rate, self.activation, name="main")
+            mainDQN = dqn.DQN(sess, self.INPUT_SIZE, self.OUTPUT_SIZE, self.h_size, self.l_rate, activation=self.activation, name="main")
             targetDQN = dqn.DQN(sess, self.INPUT_SIZE, self.OUTPUT_SIZE, name="target")
             sess.run(tf.global_variables_initializer())
 
@@ -133,7 +133,7 @@ class model:
                 done = False
                 step_count = 0
                 state = self.env.reset()
-                print(state)
+
 
                 while not done:
                     if np.random.rand() < e:
@@ -164,13 +164,12 @@ class model:
                 print("Episode: {}  steps: {}".format(episode, step_count))
 
                 # CartPole-v0 Game Clear Checking Logic
-                last_100_game_reward.append(step_count)
+                last_10_game_reward.append(step_count)
 
-                if len(last_100_game_reward) == last_100_game_reward.maxlen:
-                    avg_reward = np.mean(last_100_game_reward)
+                if len(last_10_game_reward) == last_10_game_reward.maxlen:
+                    avg_reward = np.mean(last_10_game_reward)
 
                     if avg_reward > 199:
                         print(f"Game Cleared in {episode} episodes with avg reward {avg_reward}")
-
+                        return [episode, avg_reward]
                         break
-            self.bot_play(mainDQN, self.env)
