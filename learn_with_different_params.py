@@ -20,7 +20,7 @@ train_data = collections.deque()
 activation_func = ["tf.nn.relu", "tf.nn.tanh"]
 
 for func in activation_func:
-    for i in range(10):
+    for i in range(20):
         """
         Each vars are according to following descriptions...
             1 : DISCOUNT_RATE (0.70 ~ 0.99)
@@ -35,7 +35,7 @@ for func in activation_func:
         params = [random.uniform(0.70, 0.99), random.randint(40000, 50000), random.randint(32, 64), 5, random.randint(12, 20), random.uniform(0.01, 0.001), func]
 
         # Create CartPole-v0 training model using params
-        model = learn.model("CartPole-v0", params[0], params[1], params[2], params[3], params[4], params[5], params[6], 600)
+        model = learn.model("CartPole-v0", params[0], params[1], params[2], params[3], params[4], params[5], params[6], 500)
 
         # Create list for saving episode and step data
         episode_data = []

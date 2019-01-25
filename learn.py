@@ -186,8 +186,7 @@ class model:
         plt.xlabel("Episode")
         plt.ylabel("Step")
 
-        plt.title("Discount rate: {:.3f}\nReplay Memory : {}\nBatch size: {}\nHidden layer size: {}\nLearning rate: {}\nActivation function: {}\nEpisodes that needed to train: {}\n".format(params[0], params[1], params[2], params[3], params[4], params[6], params[7]))
+        plt.title("Discount rate: {:.3f} Replay Memory : {} Batch size: {} Hidden layer size: {} Learning rate: {}\nActivation function: {} Episodes that needed to train: {}".format(params[0], params[1], params[2], params[3], params[4], params[6], params[7]))
 
         fig = plt.gcf()
-        plt.show()
         fig.savefig(fname="Discount rate: {:.3f}\nReplay Memory : {}\nBatch size: {}\nHidden layer size: {}\nLearning rate: {}\nActivation function: {}\nEpisodes that needed to train: {}\n".format(params[0], params[1], params[2], params[3], params[4], params[6], params[7]), format="png")
