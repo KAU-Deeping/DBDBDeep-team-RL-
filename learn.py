@@ -111,8 +111,8 @@ class model:
                 print("Total score: {}".format(reward_sum))
                 break
 
-
-    def train(self):
+    # Save episode and step data into each episode_data_stored and step_data_stored using list
+    def train(self, episode_data_stored, step_data_stored):
         # store the previous observations in replay memory
         replay_buffer = deque(maxlen=self.REPLAY_MEMORY)
 
@@ -163,6 +163,9 @@ class model:
 
                 print("Episode: {}  steps: {}".format(episode, step_count))
 
+                episode_data_stored.append(episode)
+                step_data_stored.append(step_count)
+
                 # CartPole-v0 Game Clear Checking Logic
                 last_10_game_reward.append(step_count)
 
@@ -177,13 +180,14 @@ class model:
         # Return episode and average reward data
         return [episode, avg_reward]
 
-    def plot(self, params, train_data):
-        plt.plot(train_data[0], train_data[1])
+    def plot(self, params, episode_data, step_data):
+        plt.plot(episode_data, step_data)
 
         plt.xlabel("Episode")
         plt.ylabel("Step")
 
-        plt.title("Discount rate: {}\nReplay Memory : {}\nBatch size: {}\nHidden layer size: {}\nLearning rate: {}\nActivation function: {}\nEpisodes that needed to train: {}\n".format(params[0], params[1], params[2], params[3], params[4], params[6], params[7]))
+        plt.title("Discount rate: {:.3f}\nReplay Memory : {}\nBatch size: {}\nHidden layer size: {}\nLearning rate: {}\nActivation function: {}\nEpisodes that needed to train: {}\n".format(params[0], params[1], params[2], params[3], params[4], params[6], params[7]))
 
+        fig = plt.gcf()
         plt.show()
-        plt.savefig("Discount rate: {}\nReplay Memory : {}\nBatch size: {}\nHidden layer size: {}\nLearning rate: {}\nActivation function: {}\nEpisodes that needed to train: {}\n".format(params[0], params[1], params[2], params[3], params[4], params[6], params[7]))
+        fig.savefig(fname="Discount rate: {:.3f}\nReplay Memory : {}\nBatch size: {}\nHidden layer size: {}\nLearning rate: {}\nActivation function: {}\nEpisodes that needed to train: {}\n".format(params[0], params[1], params[2], params[3], params[4], params[6], params[7]), format="png")
