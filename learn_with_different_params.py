@@ -26,16 +26,17 @@ for func in activation_func:
             1 : DISCOUNT_RATE (0.70 ~ 0.99)
             2 : REPLAY_MEMORY (40000 ~ 50000)
             3 : BATCH_SIZE (32 ~ 64)
-            4 : Hidden layer size (12 ~ 20)
-            5 : Learning rate (0.01 ~ 0.001)
-            6 : Activation function // Function은 string 형태로 입력되는 변수가 아닌데 어떻게 자동으로??... 오늘은 졸려서 잠좀 잘게요..내일 열심히해야
-            7 : Episodes that needed to train
-            8 : Success / Failed
+            4 : TARGET_UPDATE_FREQUENCY = 5
+            5 : Hidden layer size (12 ~ 20)
+            6 : Learning rate (0.01 ~ 0.001)
+            7 : Activation function // Function은 string 형태로 입력되는 변수가 아닌데 어떻게 자동으로??... 오늘은 졸려서 잠좀 잘게요..내일 열심히해야
+            8 : Episodes that needed to train
+            9 : Success / Failed
         """
         params = [random.uniform(0.70, 0.99), random.randint(40000, 50000), random.randint(32, 64), 5, random.randint(12, 20), random.uniform(0.01, 0.001), func]
 
         # Create CartPole-v0 training model using params
-        model = learn.model("CartPole-v0", params[0], params[1], params[2], params[3], params[4], params[5], params[6], 500)
+        model = learn.model("CartPole-v0", DISCOUNT_RATE=params[0], REPLAY_MEMORY=params[1], BATCH_SIZE=params[2], TARGET_UPDATE_FREQUENCY=params[3], h_size=params[4], l_rate=params[5], activation=params[6], MAX_EPISODES=500)
 
         # Create list for saving episode and step data
         episode_data = []
@@ -52,11 +53,12 @@ for func in activation_func:
         print("Discount rate: {}\n"
               "Replay Memory : {}\n"
               "Batch size: {}\n"
+              "Target Update Frequency: {}\n"
               "Hidden layer size: {}\n"
               "Learning rate: {}\n"
               "Activation function: {}\n"
               "Episodes that needed to train: {}\n"
-              .format(params[0], params[1], params[2], params[3], params[4], params[6], params[7]))
+              .format(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7]))
 
         train_data.append(params)
 
