@@ -12,6 +12,7 @@ import tensorflow as tf
 import random
 from collections import deque
 import dqn
+import matplotlib.pyplot as plt
 
 import gym
 from typing import List
@@ -168,7 +169,21 @@ class model:
                 if len(last_10_game_reward) == last_10_game_reward.maxlen:
                     avg_reward = np.mean(last_10_game_reward)
 
+
                     if avg_reward > 199:
                         print(f"Game Cleared in {episode} episodes with avg reward {avg_reward}")
-                        return [episode, avg_reward]
                         break
+
+        # Return episode and average reward data
+        return [episode, avg_reward]
+
+    def plot(self, params, train_data):
+        plt.plot(train_data[0], train_data[1])
+
+        plt.xlabel("Episode")
+        plt.ylabel("Step")
+
+        plt.title("Discount rate: {}\nReplay Memory : {}\nBatch size: {}\nHidden layer size: {}\nLearning rate: {}\nActivation function: {}\nEpisodes that needed to train: {}\n".format(params[0], params[1], params[2], params[3], params[4], params[6], params[7]))
+
+        plt.show()
+        plt.savefig("Discount rate: {}\nReplay Memory : {}\nBatch size: {}\nHidden layer size: {}\nLearning rate: {}\nActivation function: {}\nEpisodes that needed to train: {}\n".format(params[0], params[1], params[2], params[3], params[4], params[6], params[7]))

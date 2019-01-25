@@ -37,7 +37,7 @@ for func in activation_func:
         result = model.train()
 
         # Append ending epsode number
-        #params.append(result[0])
+        params.append(result[0])
 
         # Append training was successful or not
         params.append(True if result[1] == 200 else False)
@@ -45,6 +45,10 @@ for func in activation_func:
         print("Discount rate: {}\nReplay Memory : {}\nBatch size: {}\nHidden layer size: {}\nLearning rate: {}\nActivation function: {}\nEpisodes that needed to train: {}\n".format(params[0], params[1], params[2], params[3], params[4], params[6], params[7]))
 
         train_data.append(params)
+
+        # Show train result using graph
+        model.plot(params, train_data)
+
 
         # Clear graph for next training
         tf.reset_default_graph()
