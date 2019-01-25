@@ -36,7 +36,7 @@ class DQN:
             # Make hidden layer using activation(function) with h_size
 
             if self.activation == "tf.nn.relu":
-                net = tf.layers.dense(net, h_size, tf.nn.relu, reuse=tf.AUTO_REUSE)
+                net = tf.layers.dense(net, h_size, tf.nn.relu)
 
             elif self.activation == "tf.nn.tanh":
                 net = tf.layers.dense(net, h_size, tf.nn.tanh)
