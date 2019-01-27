@@ -1,4 +1,4 @@
-from cartpole import learn
+from breakout import learn
 import collections
 import random
 import tensorflow as tf

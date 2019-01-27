@@ -11,7 +11,7 @@ import numpy as np
 import tensorflow as tf
 import random
 from collections import deque
-from cartpole import dqn
+from breakout import dqn
 import matplotlib.pyplot as plt
 
 import gym
