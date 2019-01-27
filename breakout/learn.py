@@ -174,7 +174,7 @@ class model:
                     avg_reward = np.mean(last_10_game_reward)
 
 
-                    if avg_reward > 199:
+                    if avg_reward > 4000:
                         print(f"Game Cleared in {episode} episodes with avg reward {avg_reward}")
                         break
 
