@@ -31,14 +31,9 @@ class DQN:
 
             # Initialize X with input_size(from envs)
             self._X = tf.placeholder(tf.float32, [None, self.input_size], name="input_x")
-            conv1 = self._X
-            conv1 = tf.reshape(conv1, shape=[-1, 6, 6, 1])
+            net1 = self._X
 
-            # Make hidden layer using activation(function) with h_size
-            conv1 = tf.layers.conv2d(inputs=conv1, filters=32, kernel_size=[2, 2], activation=tf.nn.relu, padding="SAME")
-            conv2 = tf.layers.conv2d(inputs=conv1, filters=32, kernel_size=[2, 2], activation=tf.nn.relu, padding="SAME")
-            flat = tf.reshape(conv2, shape=[-1, 2])
-            net1 = tf.layers.dense(flat, h_size, tf.nn.relu)
+            net1 = tf.layers.dense(net1, h_size, tf.nn.relu)
             net2 = tf.layers.dense(net1, h_size, tf.nn.relu)
 
             output = tf.layers.dense(net2, self.output_size)
