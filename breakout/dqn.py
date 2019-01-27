@@ -32,6 +32,7 @@ class DQN:
             # Initialize X with input_size(from envs)
             self._X = tf.placeholder(tf.float32, [None, self.input_size], name="input_x")
             conv1 = self._X
+            conv1 = tf.reshape(conv1, shape=[-1, 6, 6, 1])
 
             # Make hidden layer using activation(function) with h_size
             conv1 = tf.layers.conv2d(inputs=conv1, filters=32, kernel_size=[2, 2], activation=tf.nn.relu, padding="SAME")
