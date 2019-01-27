@@ -1,4 +1,4 @@
-import learn
+from breakout import learn
 import collections
 import random
 import tensorflow as tf
@@ -29,14 +29,16 @@ for func in activation_func:
             4 : TARGET_UPDATE_FREQUENCY = 5
             5 : Hidden layer size (12 ~ 20)
             6 : Learning rate (0.01 ~ 0.001)
-            7 : Activation function // Function은 string 형태로 입력되는 변수가 아닌데 어떻게 자동으로??... 오늘은 졸려서 잠좀 잘게요..내일 열심히해야
+            7 : Activation function
             8 : Episodes that needed to train
             9 : Success / Failed
         """
-        params = [random.uniform(0.70, 0.99), random.randint(40000, 50000), random.randint(32, 64), 5, random.randint(12, 20), random.uniform(0.01, 0.001), func]
+        params = [random.uniform(0.70, 0.99), random.randint(40000, 50000), random.randint(32, 64), 5, random.randint(12, 20),
+                  random.uniform(0.01, 0.001), func]
 
         # Create CartPole-v0 training model using params
-        model = learn.model("CartPole-v0", DISCOUNT_RATE=params[0], REPLAY_MEMORY=params[1], BATCH_SIZE=params[2], TARGET_UPDATE_FREQUENCY=params[3], h_size=params[4], l_rate=params[5], activation=params[6], MAX_EPISODES=500)
+        model = learn.model("Breakout-ram-v0", DISCOUNT_RATE=params[0], REPLAY_MEMORY=params[1], BATCH_SIZE=params[2], TARGET_UPDATE_FREQUENCY=params[3],
+                            h_size=params[4], l_rate=params[5], activation=params[6], MAX_EPISODES=500)
 
         # Create list for saving episode and step data
         episode_data = []

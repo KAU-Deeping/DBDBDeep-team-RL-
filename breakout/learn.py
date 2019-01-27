@@ -11,7 +11,7 @@ import numpy as np
 import tensorflow as tf
 import random
 from collections import deque
-import dqn
+from breakout import dqn
 import matplotlib.pyplot as plt
 
 import gym
@@ -20,7 +20,8 @@ from typing import List
 class model:
 
     # Initialize model with params
-    def __init__(self, game_name: str, DISCOUNT_RATE: int=0.99, REPLAY_MEMORY: int=50000, BATCH_SIZE: int=64, TARGET_UPDATE_FREQUENCY: int=5, h_size: int=16, l_rate: int=0.001, activation: str="tf.nn.relu", MAX_EPISODES: int=50000):
+    def __init__(self, game_name: str, DISCOUNT_RATE: int=0.99, REPLAY_MEMORY: int=50000, BATCH_SIZE: int=64, TARGET_UPDATE_FREQUENCY: int=5,
+                 h_size: int=16, l_rate: int=0.001, activation: str="tf.nn.relu", MAX_EPISODES: int=50000):
         self.env = gym.make(game_name)
         self.env = gym.wrappers.Monitor(self.env, directory="gym-results/", force=True)
 
