@@ -69,4 +69,3 @@ for func in activation_func:
 
         # Clear graph for next training
         tf.reset_default_graph()
-        model.bot_play()

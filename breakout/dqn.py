@@ -31,22 +31,16 @@ class DQN:
 
             # Initialize X with input_size(from envs)
             self._X = tf.placeholder(tf.float32, [None, self.input_size], name="input_x")
-            net = self._X
+            conv1 = self._X
 
             # Make hidden layer using activation(function) with h_size
+            conv1 = tf.layers.conv2d(inputs=conv1, filters=32, kernel_size=[2, 2], activation=tf.nn.relu, padding="SAME")
+            conv2 = tf.layers.conv2d(inputs=conv1, filters=32, kernel_size=[2, 2], activation=tf.nn.relu, padding="SAME")
+            net1 = tf.layers.dense(conv2, h_size, tf.nn.relu)
+            net2 = tf.layers.dense(net1, h_size, tf.nn.relu)
 
-            if self.activation == "tf.nn.relu":
-                net = tf.layers.dense(net, h_size, tf.nn.relu, reuse=tf.AUTO_REUSE)
-
-            elif self.activation == "tf.nn.tanh":
-                net = tf.layers.dense(net, h_size, tf.nn.tanh)
-
-            else:
-                print("Invaild activation function")
-                return
-
-            net = tf.layers.dense(net, self.output_size)
-            self._Qpred = net
+            output = tf.layers.dense(net2, self.output_size)
+            self._Qpred = output
 
             # Get Y
             self._Y = tf.placeholder(tf.float32, shape=[None, self.output_size])

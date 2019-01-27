@@ -187,12 +187,14 @@ class model:
         plt.xlabel("Episode")
         plt.ylabel("Step")
 
-        plt.title("Discount rate: {:.3f} Replay Memory : {} Batch size: {} Target Update Frequency: {} Hidden layer size: {} Learning rate: {}\nActivation function: {} Episodes that needed to train: {}".format(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7]))
+        plt.title("Discount rate: {:.3f} Replay Memory : {} Batch size: {} Target Update Frequency: {} Hidden layer size: {} "
+                  "Learning rate: {}\nActivation function: {} Episodes that needed to train: {}".format(params[0], params[1], params[2], params[3],
+                                                                                                        params[4], params[5], params[6], params[7]))
 
         # Save figure to pdf
         plt.savefig(
-            fname="Discount rate: {:.3f} Replay Memory : {} Batch size: {} Target Update Frequency: {} Hidden layer size: {} Learning rate: {} Activation function: {} Episodes that needed to train: {}.pdf".format(
-                params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7]), format="pdf")
-
+            fname="Discount rate: {:.3f} Replay Memory : {} Batch size: {} Target Update Frequency: {} Hidden layer size: {} Learning rate: {} "
+                  "Activation function: {} Episodes that needed to train: {}.pdf".format(params[0], params[1], params[2], params[3],
+                                                                                         params[4], params[5], params[6], params[7]), format="pdf")
         # Clear figure for next training
         plt.clf()
