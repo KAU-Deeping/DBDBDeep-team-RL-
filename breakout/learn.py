@@ -26,6 +26,7 @@ class model:
         self.env = gym.wrappers.Monitor(self.env, directory="gym-results/", force=True)
 
         # Constants defining our neural network
+        # Shape[0]이 맞는지 확인 필요
         self.INPUT_SIZE = self.env.observation_space.shape[0]
         self.OUTPUT_SIZE = self.env.action_space.n
 
