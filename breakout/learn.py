@@ -178,6 +178,9 @@ class model:
                         print(f"Game Cleared in {episode} episodes with avg reward {avg_reward}")
                         break
 
+            # Save model : 미완성, 현재 로직대로면 각 model마다 저장이 이루어짐
+            self.save_model(sess)
+
         # Return episode and average reward data
         return [episode, avg_reward]
 
@@ -198,3 +201,8 @@ class model:
                                                                                          params[4], params[5], params[6], params[7]), format="pdf")
         # Clear figure for next training
         plt.clf()
+
+    # Save model to file "breakout_model.ckpt"
+    def save_model(self, sess: tf.Session):
+        saver = tf.train.Saver()
+        save_path = saver.save(sess, "./breakout_model.ckpt")
