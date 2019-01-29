@@ -147,7 +147,7 @@ class model:
                     next_state, reward, done, _ = self.env.step(action)
 
                     if done:  # Penalty
-                        reward = -1
+                        reward = -10
 
                     # Save the experience to our buffer
                     replay_buffer.append((state, action, reward, next_state, done))
