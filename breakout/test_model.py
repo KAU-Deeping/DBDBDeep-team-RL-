@@ -12,6 +12,7 @@ with tf.Session() as sess:
 
     state = env.reset()
     reward_sum = 0
+    #미완성(Model 재사용)
 '''
     while True:
 

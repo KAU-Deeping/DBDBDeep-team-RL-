@@ -178,7 +178,7 @@ class model:
                         print(f"Game Cleared in {episode} episodes with avg reward {avg_reward}")
                         break
 
-            # Save model : 미완성, 현재 로직대로면 각 model마다 저장이 이루어짐
+            # Save model : 미완성, 현재 로직대로면 각 model마다 저장이 이루어짐 수정해야함
             self.save_model(sess)
 
         # Return episode and average reward data
