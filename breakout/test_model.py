@@ -2,7 +2,7 @@ import tensorflow as tf
 import gym
 import numpy as np
 
-env = gym.make("Breakout-ram-v0")
+env = gym.make("Breakout-v0")
 
 # Shape[0]이 맞는지 확인 필요
 input_size = env.observation_space.shape[0]
@@ -20,7 +20,7 @@ output = tf.layers.dense(net2, output_size)
 Qpred = output
 
 with tf.Session() as sess:
-    saver = tf.train.import_meta_graph()
+    saver = tf.train.import_meta_graph('./breakout_model.ckpt.meta')
     sess.run(tf.global_variables_initializer())
     saver.restore(sess, "./breakout_model.ckpt")
 

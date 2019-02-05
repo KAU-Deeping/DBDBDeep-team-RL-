@@ -24,16 +24,21 @@ class DQN:
 
         self._build_network()
 
-# Create Deep Q Network
+    # Create Deep Q Network
     def _build_network(self, h_size=16, l_rate=0.001) -> None:
 
         with tf.variable_scope(self.net_name, reuse=False):
 
             # Initialize X with input_size(from envs)
             self._X = tf.placeholder(tf.float32, [None, self.input_size], name="input_x")
-            net1 = self._X
+            input_data = self._X
 
-            net1 = tf.layers.dense(net1, h_size, tf.nn.relu)
+            conv1 = tf.layers.conv2d(inputs=input_data, activation=tf.nn.relu)
+            conv2 = tf.layers.conv2d(inputs=conv1, activation=tf.nn.relu, strides=[2, 2], padding='SAME')
+
+            flat = tf.layers.flatten(conv2)
+
+            net1 = tf.layers.dense(flat, h_size, tf.nn.relu)
             net2 = tf.layers.dense(net1, h_size, tf.nn.relu)
 
             output = tf.layers.dense(net2, self.output_size)
@@ -54,7 +59,6 @@ class DQN:
 
         x = np.reshape(state, [-1, self.input_size])
         return self.session.run(self._Qpred, feed_dict={self._X: x})
-
 
     def update(self, x_stack: np.ndarray, y_stack: np.ndarray) -> list:
 

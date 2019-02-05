@@ -42,7 +42,7 @@ class model:
         self.l_rate = l_rate
         self.activation = activation
 
-    # Train with
+    # Train with main DQN and target DQN
     def replay_train(self, mainDQN: dqn.DQN, targetDQN: dqn.DQN, train_batch: list) -> float:
         """Trains `mainDQN` with target Q values given by `targetDQN`
         Args:
@@ -70,7 +70,7 @@ class model:
         # Train our network using target and predicted Q values on each episode
         return mainDQN.update(X, y)
 
-
+    # Copy main DQN's args to target DQN
     def get_copy_var_ops(self, *, dest_scope_name: str, src_scope_name: str) -> List[tf.Operation]:
         """Creates TF operations that copy weights from `src_scope` to `dest_scope`
         Args:
@@ -113,7 +113,7 @@ class model:
                 print("Total score: {}".format(reward_sum))
                 break
 
-    # Save episode and step data into each episode_data_stored and step_data_stored using list
+    # Train with E-greedy, discount rate and random batch. Save episode and step data into each episode_data_stored and step_data_stored using list
     def train(self, episode_data_stored, step_data_stored):
         # store the previous observations in replay memory
         replay_buffer = deque(maxlen=self.REPLAY_MEMORY)
@@ -134,10 +134,11 @@ class model:
                 e = 1. / ((episode / 10) + 1)
                 done = False
                 step_count = 0
+                live = 5
                 state = self.env.reset()
 
 
-                while not done:
+                while live != 0:
                     if np.random.rand() < e:
                         action = self.env.action_space.sample()
                     else:
@@ -149,6 +150,7 @@ class model:
 
                     if done:  # Penalty
                         reward = -10
+                        live -= 1
 
                     # Save the experience to our buffer
                     replay_buffer.append((state, action, reward, next_state, done))

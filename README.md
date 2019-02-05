@@ -2,4 +2,5 @@
 
 OpenAI - gym 
 
-1. CartPole
+1. CartPole  
+2. Breakout
