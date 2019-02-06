@@ -26,7 +26,7 @@ class model:
     def __init__(self, game_name: str, DISCOUNT_RATE: int=0.99, REPLAY_MEMORY: int=50000, BATCH_SIZE: int=64, TARGET_UPDATE_FREQUENCY: int=5,
                  h_size: int=16, l_rate: int=0.001, activation: str="tf.nn.relu", MAX_EPISODES: int=50000):
         self.env = gym.make(game_name)
-        self.env = gym.wrappers.Monitor(self.env, directory="gym-results/", force=True)
+        #self.env = gym.wrappers.Monitor(self.env, directory="gym-results/", force=True)
 
         # Constants defining our neural network
         # Shape[0]이 맞는지 확인 필요

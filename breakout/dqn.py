@@ -34,7 +34,7 @@ class DQN:
             input_data = self._X
 
             conv1 = tf.layers.conv2d(inputs=input_data, filters=64, kernel_size=[2, 2], padding='SAME', activation=tf.nn.relu)
-            conv2 = tf.layers.conv2d(inputs=conv1, activation=tf.nn.relu, filters=64, kernel_size=[2, 2], padding='SAME')
+            conv2 = tf.layers.conv2d(inputs=conv1, filters=32, kernel_size=[2, 2], padding='SAME', activation=tf.nn.relu)
 
             flat = tf.layers.flatten(conv2)
 
