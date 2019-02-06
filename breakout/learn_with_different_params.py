@@ -37,7 +37,7 @@ for func in activation_func:
                   random.uniform(0.01, 0.001), func]
 
         # Create CartPole-v0 training model using params
-        model = learn.model("Breakout-ram-v0", DISCOUNT_RATE=params[0], REPLAY_MEMORY=params[1], BATCH_SIZE=params[2], TARGET_UPDATE_FREQUENCY=params[3],
+        model = learn.model("Breakout-v0", DISCOUNT_RATE=params[0], REPLAY_MEMORY=params[1], BATCH_SIZE=params[2], TARGET_UPDATE_FREQUENCY=params[3],
                             h_size=params[4], l_rate=params[5], activation=params[6], MAX_EPISODES=500)
 
         # Create list for saving episode and step data
@@ -69,4 +69,3 @@ for func in activation_func:
 
         # Clear graph for next training
         tf.reset_default_graph()
-        model.bot_play()
