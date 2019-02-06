@@ -111,8 +111,7 @@ class model:
         reward_sum = 0
 
         while True:
-
-            env.render()
+            #env.render()
             action = np.argmax(mainDQN.predict(state))
             state, reward, done, _ = env.step(action)
             reward_sum += reward
@@ -142,11 +141,11 @@ class model:
                 e = 1. / ((episode / 10) + 1)
                 done = False
                 step_count = 0
-                live = 5
+                life = 5
                 state = self.env.reset()
 
 
-                while live != 0:
+                while life != 0:
                     if np.random.rand() < e:
                         action = self.env.action_space.sample()
                     else:
@@ -155,12 +154,18 @@ class model:
 
                     # Get new state and reward from environment
                     next_state, reward, done, _ = self.env.step(action)
-                    next_state = self.pre_proc(next_state)
-                    next_state = np.reshape(next_state, (1, 84, 84, 1))
+
 
                     if done:  # Penalty
                         reward = -10
-                        live -= 1
+                        life -= 1
+
+                    # Pre processing states
+                    next_state = self.pre_proc(next_state)
+                    next_state = np.reshape(next_state, (1, 84, 84, 1))
+
+                    state = self.pre_proc(state)
+                    state = np.reshape(state, (1, 84, 84, 1))
 
                     # Save the experience to our buffer
                     replay_buffer.append((next_state, action, reward, next_state, done))
@@ -174,6 +179,8 @@ class model:
 
                     state = next_state
                     step_count += 1
+
+                    print(life + done)
 
                 print("Episode: {}  steps: {}".format(episode, step_count))
 
