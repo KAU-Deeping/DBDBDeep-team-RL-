@@ -33,8 +33,8 @@ class DQN:
             self._X = tf.placeholder(tf.float32, [None, self.input_size], name="input_x")
             input_data = self._X
 
-            conv1 = tf.layers.conv2d(inputs=input_data, activation=tf.nn.relu)
-            conv2 = tf.layers.conv2d(inputs=conv1, activation=tf.nn.relu, strides=[2, 2], padding='SAME')
+            conv1 = tf.layers.conv2d(inputs=input_data, filters=64, kernel_size=[2, 2], padding='SAME', activation=tf.nn.relu)
+            conv2 = tf.layers.conv2d(inputs=conv1, activation=tf.nn.relu, filters=64, kernel_size=[2, 2], padding='SAME')
 
             flat = tf.layers.flatten(conv2)
 
