@@ -30,7 +30,7 @@ class DQN:
         with tf.variable_scope(self.net_name, reuse=False):
 
             # Initialize X with input_size(from envs)
-            self._X = tf.placeholder(tf.float32, [None, 210, 160, 3], name="input_x")
+            self._X = tf.placeholder(tf.float32, [None, 84, 84, 1], name="input_x")
             input_data = self._X
 
             conv1 = tf.layers.conv2d(inputs=input_data, filters=64, kernel_size=[2, 2], padding='SAME', activation=tf.nn.relu)
@@ -56,8 +56,7 @@ class DQN:
 
 
     def predict(self, state: np.ndarray) -> np.ndarray:
-
-        x = np.reshape(state, [-1, 210, 160, 3])
+        x = state
         return self.session.run(self._Qpred, feed_dict={self._X: x})
 
     def update(self, x_stack: np.ndarray, y_stack: np.ndarray) -> list:

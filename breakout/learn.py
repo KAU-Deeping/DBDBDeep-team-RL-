@@ -30,7 +30,7 @@ class model:
 
         # Constants defining our neural network
         # Shape[0]이 맞는지 확인 필요
-        self.INPUT_SIZE = (84, 84, 4)
+        self.INPUT_SIZE = (84, 84, 3)
         self.OUTPUT_SIZE = self.env.action_space.n
 
         # Initialize model's params
@@ -63,7 +63,6 @@ class model:
             float: After updating `mainDQN`, it returns a `loss`
         """
         states = np.vstack([x[0] for x in train_batch])
-        print(states)
         actions = np.array([x[1] for x in train_batch])
         rewards = np.array([x[2] for x in train_batch])
         next_states = np.vstack([x[3] for x in train_batch])
@@ -152,20 +151,19 @@ class model:
                         action = self.env.action_space.sample()
                     else:
                         # Choose an action by greedily from the Q-network
-                        state = tf.reshape(state, shape=[-1, 210, 160, 3])
                         action = np.argmax(mainDQN.predict(state))
 
                     # Get new state and reward from environment
                     next_state, reward, done, _ = self.env.step(action)
                     next_state = self.pre_proc(next_state)
-                    next_state = np.reshape(next_state, (-1, 84, 84, 1))
+                    next_state = np.reshape(next_state, (1, 84, 84, 1))
 
                     if done:  # Penalty
                         reward = -10
                         live -= 1
 
                     # Save the experience to our buffer
-                    replay_buffer.append((state, action, reward, next_state, done))
+                    replay_buffer.append((next_state, action, reward, next_state, done))
 
                     if len(replay_buffer) > self.BATCH_SIZE:
                         minibatch = random.sample(replay_buffer, self.BATCH_SIZE)
