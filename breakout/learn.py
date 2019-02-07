@@ -26,11 +26,11 @@ class model:
     def __init__(self, game_name: str, DISCOUNT_RATE: int=0.99, REPLAY_MEMORY: int=50000, BATCH_SIZE: int=64, TARGET_UPDATE_FREQUENCY: int=5,
                  h_size: int=16, l_rate: int=0.001, activation: str="tf.nn.relu", MAX_EPISODES: int=50000):
         self.env = gym.make(game_name)
-        #self.env = gym.wrappers.Monitor(self.env, directory="gym-results/", force=True)
+        self.env = gym.wrappers.Monitor(self.env, directory="gym-results/", force=True)
 
         # Constants defining our neural network
         # Shape[0]이 맞는지 확인 필요
-        self.INPUT_SIZE = (84, 84, 3)
+        self.INPUT_SIZE = self.env.observation_space.shape
         self.OUTPUT_SIZE = self.env.action_space.n
 
         # Initialize model's params
@@ -141,11 +141,9 @@ class model:
                 e = 1. / ((episode / 10) + 1)
                 done = False
                 step_count = 0
-                life = 5
                 state = self.env.reset()
 
-
-                while life != 0:
+                while not done:
                     if np.random.rand() < e:
                         action = self.env.action_space.sample()
                     else:
@@ -158,14 +156,13 @@ class model:
 
                     if done:  # Penalty
                         reward = -10
-                        life -= 1
 
                     # Pre processing states
                     next_state = self.pre_proc(next_state)
                     next_state = np.reshape(next_state, (1, 84, 84, 1))
 
-                    state = self.pre_proc(state)
-                    state = np.reshape(state, (1, 84, 84, 1))
+                    #state = self.pre_proc(state)
+                    #state = np.reshape(state, (1, 84, 84, 1))
 
                     # Save the experience to our buffer
                     replay_buffer.append((next_state, action, reward, next_state, done))
@@ -180,8 +177,6 @@ class model:
                     state = next_state
                     step_count += 1
 
-                    print(life + done)
-
                 print("Episode: {}  steps: {}".format(episode, step_count))
 
                 episode_data_stored.append(episode)
@@ -195,7 +190,7 @@ class model:
 
 
                     if avg_reward > 4000:
-                        print(f"Game Cleared in {episode} episodes with avg reward {avg_reward}")
+                        print("Game Cleared in {episode} episodes with avg reward {avg_reward}")
                         break
 
             # Save model : 미완성, 현재 로직대로면 각 model마다 저장이 이루어짐 수정해야함

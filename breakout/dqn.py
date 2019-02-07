@@ -30,11 +30,11 @@ class DQN:
         with tf.variable_scope(self.net_name, reuse=False):
 
             # Initialize X with input_size(from envs)
-            self._X = tf.placeholder(tf.float32, [None, 84, 84, 1], name="input_x")
+            self._X = tf.placeholder(tf.float32, shape=(84, 84, 1), name="input_x")
             input_data = self._X
 
-            conv1 = tf.layers.conv2d(inputs=input_data, filters=64, kernel_size=[2, 2], padding='SAME', activation=tf.nn.relu)
-            conv2 = tf.layers.conv2d(inputs=conv1, filters=32, kernel_size=[2, 2], padding='SAME', activation=tf.nn.relu)
+            conv1 = tf.layers.conv2d(inputs=input_data, filters=64, kernel_size=[4, 4], padding='SAME', activation=tf.nn.relu)
+            conv2 = tf.layers.conv2d(inputs=conv1, filters=32, kernel_size=[4, 4], padding='SAME', activation=tf.nn.relu)
 
             flat = tf.layers.flatten(conv2)
 
@@ -52,7 +52,6 @@ class DQN:
 
             optimizer = tf.train.AdamOptimizer(learning_rate=l_rate)
             self._train = optimizer.minimize(self._loss)
-
 
 
     def predict(self, state: np.ndarray) -> np.ndarray:
