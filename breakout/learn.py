@@ -111,7 +111,7 @@ class model:
         reward_sum = 0
 
         while True:
-            #env.render()
+            env.render()
             action = np.argmax(mainDQN.predict(state))
             state, reward, done, _ = env.step(action)
             reward_sum += reward
@@ -167,7 +167,7 @@ class model:
                         continue
                         #reward = -10
 
-                    # Pre processing states
+                    # Pre processing next_states
                     next_state = self.pre_proc(next_state)
                     next_state = np.reshape(next_state, (1, 84, 84, 1))
                     next_history = np.append(next_state, history[:, :, :, :3], axis=3)

@@ -2,10 +2,16 @@ import tensorflow as tf
 import gym
 import numpy as np
 
-env = gym.make("Breakout-v0")
+from skimage.transform import resize
+from skimage.color import rgb2gray
 
-# Shape[0]이 맞는지 확인 필요
-input_size = env.observation_space.shape[0]
+def pre_proc(x):
+    x = np.uint8(resize(rgb2gray(x), (84, 84), mode='constant') * 255)
+    return x
+
+env = gym.make("BreakoutDeterministic-v0")
+
+input_size = (84, 84, 4)
 output_size = env.action_space.n
 
 # Make model
@@ -31,6 +37,13 @@ with tf.Session() as sess:
     saver.restore(sess, "./breakout_model.ckpt")
 
     state = env.reset()
+    if np.shape(state) == (1, 84, 84, 1):
+        pass
+    else:
+        state = pre_proc(state)
+
+    history = np.stack((state, state, state, state), axis=2)
+    history = np.reshape([history], (1, 84, 84, 4))
     reward_sum = 0
 
 
@@ -39,15 +52,22 @@ with tf.Session() as sess:
         env.render()
 
         # Reshape x for predict next action
-        x = np.reshape(state, newshape=[-1, 84, 84, 4])
+        x = np.reshape(history, newshape=[-1, 84, 84, 4])
 
         # Calculate action with model
         action = np.argmax(sess.run(Qpred, feed_dict={X: x}))
 
         # Get reward, done, next state information
         state, reward, done, _ = env.step(action)
+
+        # Pre processing next_states
+        state = pre_proc(state)
+        state = np.reshape(state, (1, 84, 84, 1))
+        history = np.append(state, history[:, :, :, :3], axis=3)
+
         reward_sum += reward
 
         if done:
             print("Total score: {}".format(reward_sum))
             break
+
