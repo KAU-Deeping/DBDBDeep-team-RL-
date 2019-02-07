@@ -47,7 +47,7 @@ class model:
 
     # Make input frame to gray scale and resize
     def pre_proc(self, x):
-        x = np.uint8(resize(rgb2gray(x), (84, 84), mode='reflect') * 255)
+        x = np.uint8(resize(rgb2gray(x), (84, 84), mode='constant') * 255)
         return x
 
     # Train with main DQN and target DQN
@@ -65,7 +65,7 @@ class model:
         states = np.vstack([x[0] for x in train_batch])
         actions = np.array([x[1] for x in train_batch])
         rewards = np.array([x[2] for x in train_batch])
-        next_states = np.vstack([x[3] for x in train_batch])
+        next_states = np.stack([x[3] for x in train_batch])
         done = np.array([x[4] for x in train_batch])
 
         X = states
@@ -140,13 +140,16 @@ class model:
             for episode in range(self.MAX_EPISODES):
                 e = 1. / ((episode / 10) + 1)
                 done = False
-                step_count = 0
+                reward_sum = 0
                 state = self.env.reset()
 
                 if np.shape(state) == (1, 84, 84, 1):
                     continue
                 else:
                     state = self.pre_proc(state)
+
+                history = np.stack((state, state, state, state), axis=2)
+                history = np.reshape([history], (1, 84, 84, 4))
 
                 while not done:
                     if np.random.rand() < e:
@@ -155,7 +158,7 @@ class model:
                         # Reshape state to (1, 84, 84, 1)
                         state = np.reshape(state, (1, 84, 84, 1))
                         # Choose an action by greedily from the Q-network
-                        action = np.argmax(mainDQN.predict(state))
+                        action = np.argmax(mainDQN.predict(history))
 
                     # Get new state and reward from environment
                     next_state, reward, done, _ = self.env.step(action)
@@ -167,27 +170,28 @@ class model:
                     # Pre processing states
                     next_state = self.pre_proc(next_state)
                     next_state = np.reshape(next_state, (1, 84, 84, 1))
+                    next_history = np.append(next_state, history[:, :, :, :3], axis=3)
 
                     # Save the experience to our buffer
-                    replay_buffer.append((next_state, action, reward, next_state, done))
+                    replay_buffer.append((history, action, reward, next_history, done))
 
                     if len(replay_buffer) > self.BATCH_SIZE:
                         minibatch = random.sample(replay_buffer, self.BATCH_SIZE)
                         loss, _ = self.replay_train(mainDQN, targetDQN, minibatch)
 
-                    if step_count % self.TARGET_UPDATE_FREQUENCY == 0:
+                    if reward_sum % self.TARGET_UPDATE_FREQUENCY == 0:
                         sess.run(copy_ops)
 
                     state = next_state
-                    step_count += 1
+                    reward_sum += reward
 
-                print("Episode: {}  steps: {}".format(episode, step_count))
+                print("Episode: {}  Rewards: {}".format(episode, reward_sum))
 
                 episode_data_stored.append(episode)
-                step_data_stored.append(step_count)
+                step_data_stored.append(reward_sum)
 
                 # CartPole-v0 Game Clear Checking Logic
-                last_10_game_reward.append(step_count)
+                last_10_game_reward.append(reward_sum)
 
                 if len(last_10_game_reward) == last_10_game_reward.maxlen:
                     avg_reward = np.mean(last_10_game_reward)
