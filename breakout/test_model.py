@@ -9,12 +9,18 @@ input_size = env.observation_space.shape[0]
 output_size = env.action_space.n
 
 # Make model
-X = tf.placeholder(tf.float32, [None, env.observation_space.shape[0]], name="input_x")
-net1 = X
+X = tf.placeholder(tf.float32, shape=(None, 84, 84, 4), name="input_x")
+input_data = X
 
 # Set appropriate h_size selected by learn_with_different_params
-net1 = tf.layers.dense(net1, 10, tf.nn.relu)
-net2 = tf.layers.dense(net1, 10, tf.nn.relu)
+conv1 = tf.layers.conv2d(inputs=input_data, filters=64, kernel_size=[8, 8], strides=[8, 8], activation=tf.nn.relu)
+conv2 = tf.layers.conv2d(inputs=conv1, filters=32, kernel_size=[4, 4], strides=[4, 4], activation=tf.nn.relu)
+conv3 = tf.layers.conv2d(inputs=conv2, filters=32, kernel_size=[3, 3], padding='SAME', activation=tf.nn.relu)
+
+flat = tf.layers.flatten(conv3)
+
+net1 = tf.layers.dense(flat, 128, tf.nn.relu)
+net2 = tf.layers.dense(net1, 128, tf.nn.relu)
 
 output = tf.layers.dense(net2, output_size)
 Qpred = output
@@ -30,11 +36,10 @@ with tf.Session() as sess:
 
     #미완성(Model 재사용)
     while True:
-
         env.render()
 
         # Reshape x for predict next action
-        x = np.reshape(state, [-1, input_size])
+        x = np.reshape(state, newshape=[-1, 84, 84, 4])
 
         # Calculate action with model
         action = np.argmax(sess.run(Qpred, feed_dict={X: x}))

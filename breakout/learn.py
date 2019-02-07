@@ -190,6 +190,7 @@ class model:
                 episode_data_stored.append(episode)
                 step_data_stored.append(reward_sum)
 
+                """
                 # CartPole-v0 Game Clear Checking Logic
                 last_10_game_reward.append(reward_sum)
 
@@ -200,12 +201,13 @@ class model:
                     if avg_reward > 4000:
                         print("Game Cleared in {episode} episodes with avg reward {avg_reward}")
                         break
+                """
 
-            # Save model : 미완성, 현재 로직대로면 각 model마다 저장이 이루어짐 수정해야함
+            # Save model
             self.save_model(sess)
 
         # Return episode and average reward data
-        return [episode, avg_reward]
+        return [episode]
 
     def plot(self, params, episode_data, step_data):
         plt.plot(episode_data, step_data)
