@@ -143,26 +143,30 @@ class model:
                 step_count = 0
                 state = self.env.reset()
 
+                if np.shape(state) == (1, 84, 84, 1):
+                    continue
+                else:
+                    state = self.pre_proc(state)
+
                 while not done:
                     if np.random.rand() < e:
                         action = self.env.action_space.sample()
                     else:
+                        # Reshape state to (1, 84, 84, 1)
+                        state = np.reshape(state, (1, 84, 84, 1))
                         # Choose an action by greedily from the Q-network
                         action = np.argmax(mainDQN.predict(state))
 
                     # Get new state and reward from environment
                     next_state, reward, done, _ = self.env.step(action)
 
-
                     if done:  # Penalty
-                        reward = -10
+                        continue
+                        #reward = -10
 
                     # Pre processing states
                     next_state = self.pre_proc(next_state)
                     next_state = np.reshape(next_state, (1, 84, 84, 1))
-
-                    #state = self.pre_proc(state)
-                    #state = np.reshape(state, (1, 84, 84, 1))
 
                     # Save the experience to our buffer
                     replay_buffer.append((next_state, action, reward, next_state, done))
