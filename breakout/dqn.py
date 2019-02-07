@@ -30,7 +30,7 @@ class DQN:
         with tf.variable_scope(self.net_name, reuse=False):
 
             # Initialize X with input_size(from envs)
-            self._X = tf.placeholder(tf.float32, shape=(84, 84, 1), name="input_x")
+            self._X = tf.placeholder(tf.float32, shape=(None, 84, 84, 1), name="input_x")
             input_data = self._X
 
             conv1 = tf.layers.conv2d(inputs=input_data, filters=64, kernel_size=[4, 4], padding='SAME', activation=tf.nn.relu)
