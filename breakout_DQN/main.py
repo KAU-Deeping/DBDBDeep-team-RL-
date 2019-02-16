@@ -13,7 +13,7 @@ total_episode = 500000
 no_op_step = 30
 train_start = 500000
 update_target_rate = 10000
-saver = tf.train.Saver()
+
 
 global_step = 0
 
@@ -21,11 +21,15 @@ with tf.Session() as sess:
     main_model = dqn.DQN(0.00025, "main", env.observation_space.shape, env.action_space.n,sess)
     target_model = dqn.DQN(0.00025, "target", env.observation_space.shape, env.action_space.n, sess)
     learn = learn.Learn(main_model, target_model, 0.99, env)
+    saver = tf.train.Saver()
 
     for episode in range(total_episode):
-        if episode % 10000 == 0:
-            saver.save(sess, 'model')
-            print("Model successfully saved")
+        if episode == 0:
+            continue
+        else:
+            if episode % 10000 == 0:
+                saver.save(sess, 'model')
+                print("Model successfully saved")
         step = 0
         done = False
         dead = False
