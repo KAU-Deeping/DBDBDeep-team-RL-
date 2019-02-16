@@ -8,6 +8,7 @@ class DQN:
         self.OUTPUT_SIZE = output_size
         self.session = session
 
+        self.session.run(tf.global_variables_initializer())
         self.build_model(0.00025, 512)
         self.session.run(tf.global_variables_initializer())
 

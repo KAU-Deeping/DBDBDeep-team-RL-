@@ -13,17 +13,18 @@ total_episode = 500000
 no_op_step = 30
 train_start = 500000
 update_target_rate = 10000
-
-
 global_step = 0
 
 with tf.Session() as sess:
     main_model = dqn.DQN(0.00025, "main", env.observation_space.shape, env.action_space.n,sess)
     target_model = dqn.DQN(0.00025, "target", env.observation_space.shape, env.action_space.n, sess)
-    learn = learn.Learn(main_model, target_model, 0.99, env)
+
     saver = tf.train.Saver()
 
+    learn = learn.Learn(main_model, target_model, 0.99, env)
+
     for episode in range(total_episode):
+        # Save model
         if episode % 10000 == 0:
             saver.save(sess, './model')
             print("Model successfully saved")
@@ -34,13 +35,13 @@ with tf.Session() as sess:
         score = 0
 
         observe = env.reset()
-
+        
         # 0~30 step 중 random한 step 동안 정지
-        #for _ in range(random.randint(1, no_op_step)):
-        #    observe, _, _, _ = env.step(1)
+        for _ in range(random.randint(1, no_op_step)):
+            observe, _, _, _ = env.step(1)
 
         observe = preprocessing.preproc(observe)
-        history = np.stack((observe, observe, observe, observe), axis=2)
+        history = np.stack((observe, observe, observe, observe), axis=2)  #problem
         history = np.reshape([history], (1, 84, 84, 4))
 
         while not done:
@@ -54,21 +55,22 @@ with tf.Session() as sess:
                 action = learn.get_action(history, global_step)
 
             observe, reward, done, info = env.step(action)
-            #print(reward)
             score += reward
 
             if info['ale.lives'] != start_life:
                 start_life = info['ale.lives']
                 dead = True
 
-            next_state = preprocessing.preproc(observe)
+            next_state = preprocessing.preproc(observe)  
             next_state = np.reshape([next_state], (1, 84, 84, 1))
             next_history = np.append(next_state, history[:,:,:,:3], axis=3)
 
+            # sample memory에 저장
             learn.append_sample(history, action, reward, next_history, done)
 
             if learn.get_memory_len() >= train_start:
                 learn.replay_train()
+            
             if global_step % update_target_rate == 0:
                 learn.get_copy_var_ops(dest_scope_name="target", src_scope_name="main")
 
