@@ -13,6 +13,7 @@ total_episode = 500000
 no_op_step = 30
 train_start = 500000
 update_target_rate = 10000
+saver = tf.Saver()
 
 global_step = 0
 
@@ -22,6 +23,9 @@ with tf.Session() as sess:
     learn = learn.Learn(main_model, target_model, 0.99, env)
 
     for episode in range(total_episode):
+        if episode % 10000 == 0:
+            saver.save(sess, 'model')
+            print("Model successfully saved")
         step = 0
         done = False
         dead = False
