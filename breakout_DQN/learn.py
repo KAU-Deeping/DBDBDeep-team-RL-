@@ -60,7 +60,7 @@ class Learn:
         else:
             action = self.main_model.predict(history)
 
-        return action
+        return np.argmax(action)
 
     # Copy main DQN's args to target DQN
     def get_copy_var_ops(self, *, dest_scope_name: str, src_scope_name: str) -> List[tf.Operation]:

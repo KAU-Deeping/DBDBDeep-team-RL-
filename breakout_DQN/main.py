@@ -24,6 +24,7 @@ with tf.Session() as sess:
     for episode in range(total_episode):
         step = 0
         done = False
+        dead = False
         life = start_life
         score = 0
 
@@ -40,7 +41,6 @@ with tf.Session() as sess:
         while not done:
             step += 1
             global_step += 1
-            dead = False
 
             if dead:
                 action = 1
@@ -63,7 +63,7 @@ with tf.Session() as sess:
 
             if learn.get_memory_len() >= train_start:
                 learn.replay_train()
-            if global_step % update_target_rate:
+            if global_step % update_target_rate == 0:
                 learn.get_copy_var_ops(dest_scope_name="target", src_scope_name="main")
 
             history = next_history
