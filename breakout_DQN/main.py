@@ -13,7 +13,7 @@ total_episode = 500000
 no_op_step = 30
 train_start = 500000
 update_target_rate = 10000
-saver = tf.Saver()
+saver = tf.train.Saver()
 
 global_step = 0
 
