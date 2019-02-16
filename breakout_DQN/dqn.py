@@ -14,7 +14,8 @@ class DQN:
         with tf.VariableScope(name=self.NAME):
             self._X = tf.placeholder(dtype=tf.float32, shape=[None, 84, 84, 4], name='INPUT_DATA')
 
-            conv1 = tf.layers.conv2d(inputs=self._X, filters=32, strides=[4, 4], kernel_size=[8, 8], activation=tf.nn.relu, kernel_initializer=tf.contrib.layers.xavier_initializer())
+            conv1 = tf.layers.conv2d(inputs=self._X, filters=32, strides=[4, 4], kernel_size=[8, 8],
+                                     activation=tf.nn.relu, kernel_initializer=tf.contrib.layers.xavier_initializer())
             conv2 = tf.layers.conv2d(inputs=conv1, filters=64, strides=[2, 2], kernel_size=[4, 4],
                                      activation=tf.nn.relu, kernel_initializer=tf.contrib.layers.xavier_initializer())
             conv3 = tf.layers.conv2d(inputs=conv2, filters=64, strides=[1, 1], kernel_size=[3, 3],
