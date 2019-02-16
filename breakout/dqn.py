@@ -33,6 +33,7 @@ class DQN:
             self._X = tf.placeholder(tf.float32, shape=(None, 84, 84, 4), name="input_x")
             input_data = self._X
 
+
             conv1 = tf.layers.conv2d(inputs=input_data, filters=64, kernel_size=[8, 8], strides=[8, 8], activation=tf.nn.relu)
             conv2 = tf.layers.conv2d(inputs=conv1, filters=32, kernel_size=[4, 4], strides=[4, 4], activation=tf.nn.relu)
             conv3 = tf.layers.conv2d(inputs=conv2, filters=32, kernel_size=[3, 3], padding='SAME', activation=tf.nn.relu)
@@ -47,6 +48,7 @@ class DQN:
 
             # Get Y
             self._Y = tf.placeholder(tf.float32, shape=[None, self.output_size])
+            print(self._Y)
 
             # Define loss function
             self._loss = tf.losses.mean_squared_error(self._Y, self._Qpred)

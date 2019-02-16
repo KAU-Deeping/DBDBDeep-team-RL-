@@ -10,6 +10,7 @@ Notes:
 import numpy as np
 import tensorflow as tf
 import random
+
 from collections import deque
 from breakout import dqn
 import matplotlib.pyplot as plt
@@ -159,6 +160,7 @@ class model:
                         state = np.reshape(state, (1, 84, 84, 1))
                         # Choose an action by greedily from the Q-network
                         action = np.argmax(mainDQN.predict(history))
+                        print(action)
 
                     # Get new state and reward from environment
                     next_state, reward, done, _ = self.env.step(action)
