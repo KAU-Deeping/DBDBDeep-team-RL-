@@ -8,26 +8,26 @@ class DQN:
         self.OUTPUT_SIZE = output_size
         self.session = session
 
-        self.build_model()
+        self.build_model(0.00025, 512)
 
     def build_model(self, learning_rate, h_size):
-        with tf.VariableScope(name=self.NAME):
+        with tf.variable_scope(self.NAME, reuse=False):
             self._X = tf.placeholder(dtype=tf.float32, shape=[None, 84, 84, 4], name='INPUT_DATA')
 
             conv1 = tf.layers.conv2d(inputs=self._X, filters=32, strides=[4, 4], kernel_size=[8, 8],
-                                     activation=tf.nn.relu, kernel_initializer=tf.contrib.layers.xavier_initializer())
+                                     activation=tf.nn.relu)
             conv2 = tf.layers.conv2d(inputs=conv1, filters=64, strides=[2, 2], kernel_size=[4, 4],
-                                     activation=tf.nn.relu, kernel_initializer=tf.contrib.layers.xavier_initializer())
+                                     activation=tf.nn.relu)
             conv3 = tf.layers.conv2d(inputs=conv2, filters=64, strides=[1, 1], kernel_size=[3, 3],
-                                     activation=tf.nn.relu, kernel_initializer=tf.contrib.layers.xavier_initializer())
+                                     activation=tf.nn.relu)
 
             flat = tf.layers.flatten(conv3)
 
             fc = tf.layers.dense(inputs=flat, units=512, activation=tf.nn.relu)
-            output = tf.layers.dense(input=flat, units=self.OUTPUT_SIZE)
+            output = tf.layers.dense(fc, self.OUTPUT_SIZE)
             self._Qpred = output
 
-            self._Y = tf.placeholder(dtype=tf.float32, shape=self.OUTPUT_SIZE, name='Y')
+            self._Y = tf.placeholder(dtype=tf.float32, shape=[None, self.OUTPUT_SIZE], name='Y')
 
             self._loss = tf.losses.mean_squared_error(self._Y, self._Qpred)
 
