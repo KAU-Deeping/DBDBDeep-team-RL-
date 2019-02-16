@@ -24,12 +24,9 @@ with tf.Session() as sess:
     saver = tf.train.Saver()
 
     for episode in range(total_episode):
-        if episode == 0:
-            continue
-        else:
-            if episode % 10000 == 0:
-                saver.save(sess, 'model')
-                print("Model successfully saved")
+        if episode % 10000 == 0:
+            saver.save(sess, './model')
+            print("Model successfully saved")
         step = 0
         done = False
         dead = False
@@ -39,8 +36,8 @@ with tf.Session() as sess:
         observe = env.reset()
 
         # 0~30 step 중 random한 step 동안 정지
-        for _ in range(random.randint(1, no_op_step)):
-            observe, _, _, _ = env.step(1)
+        #for _ in range(random.randint(1, no_op_step)):
+        #    observe, _, _, _ = env.step(1)
 
         observe = preprocessing.preproc(observe)
         history = np.stack((observe, observe, observe, observe), axis=2)
@@ -57,6 +54,7 @@ with tf.Session() as sess:
                 action = learn.get_action(history, global_step)
 
             observe, reward, done, info = env.step(action)
+            #print(reward)
             score += reward
 
             if info['ale.lives'] != start_life:
