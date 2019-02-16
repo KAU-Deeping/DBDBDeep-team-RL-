@@ -1,7 +1,7 @@
 import numpy as np
 import random
 import tensorflow as tf
-import breakout_DQN.dqn
+import dqn
 
 from typing import List
 from collections import deque
@@ -60,7 +60,8 @@ class Learn:
         else:
             action = self.main_model.predict(history)
 
-        return action
+        #return action
+        return np.argmax(action)
 
     # Copy main DQN's args to target DQN
     def get_copy_var_ops(self, *, dest_scope_name: str, src_scope_name: str) -> List[tf.Operation]:
