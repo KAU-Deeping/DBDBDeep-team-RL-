@@ -40,12 +40,10 @@ class model:
         self.BATCH_SIZE = BATCH_SIZE
         self.TARGET_UPDATE_FREQUENCY = TARGET_UPDATE_FREQUENCY
         self.MAX_EPISODES = MAX_EPISODES
-
         # Initialize dqn's params
         self.h_size = h_size
         self.l_rate = l_rate
         self.activation = activation
-
     # Make input frame to gray scale and resize
     def pre_proc(self, x):
         x = np.uint8(resize(rgb2gray(x), (84, 84), mode='constant') * 255)
