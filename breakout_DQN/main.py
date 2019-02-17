@@ -9,19 +9,24 @@ import preprocessing
 
 env = gym.make('BreakoutDeterministic-v4')
 start_life = 5
-total_episode = 500000
+total_episode = 50000
 no_op_step = 30
-train_start = 500000
+train_start = 50000
 update_target_rate = 10000
 
 global_step = 0
 
 with tf.Session() as sess:
     main_model = dqn.DQN(0.00025, "main", env.observation_space.shape, env.action_space.n,sess)
+    saver = tf.train.Saver()
     target_model = dqn.DQN(0.00025, "target", env.observation_space.shape, env.action_space.n, sess)
     learn = learn.Learn(main_model, target_model, 0.99, env)
 
     for episode in range(total_episode):
+        if episode % 10000 == 0:
+            saver.save(sess, './model')
+            print("Model successfully saved")
+            
         step = 0
         done = False
         dead = False
@@ -51,8 +56,8 @@ with tf.Session() as sess:
             observe, reward, done, info = env.step(action)
             score += reward
 
-            if info['ale.lives'] != start_life:
-                start_life = info['ale.lives']
+            if info['ale.lives'] != life:
+                life = info['ale.lives']
                 dead = True
 
             next_state = preprocessing.preproc(observe)  
