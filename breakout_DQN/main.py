@@ -11,7 +11,8 @@ env = gym.make('BreakoutDeterministic-v4')
 start_life = 5
 total_episode = 500000
 no_op_step = 30
-train_start = 500000
+# Modified for test
+train_start = 50000
 update_target_rate = 10000
 global_step = 0
 
@@ -35,6 +36,7 @@ with tf.Session() as sess:
         score = 0
 
         observe = env.reset()
+        env.render()
         
         # 0~30 step 중 random한 step 동안 정지
         for _ in range(random.randint(1, no_op_step)):
@@ -57,8 +59,8 @@ with tf.Session() as sess:
             observe, reward, done, info = env.step(action)
             score += reward
 
-            if info['ale.lives'] != start_life:
-                start_life = info['ale.lives']
+            if info['ale.lives'] != life:
+                life = info['ale.lives']
                 dead = True
 
             next_state = preprocessing.preproc(observe)  

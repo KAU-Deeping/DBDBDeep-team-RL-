@@ -31,37 +31,37 @@ class Learn:
         # Make arrays for each data
         next_history = np.zeros((self.batch_size, self.history_size[0], self.history_size[1], self.history_size[2]))
         action, reward, done = [], [], []
-        target = np.zeros((self.batch_size,))
+        target = np.zeros((self.batch_size, 4))
 
         # Copy vars from mini_batch to each array
         for i in range(self.batch_size):
             # 확인 필요
-            history[i] = mini_batch[i][0]
+            history[i] = np.float32(mini_batch[i][0] / 255.)
             action.append(mini_batch[i][1])
             reward.append(mini_batch[i][2])
-            next_history[i] = mini_batch[i][3]
+            next_history[i] = np.float32(mini_batch[i][3] / 255.)
             done.append(mini_batch[i][4])
 
-        target_val =  self.target_model.predict(next_history)
+        target_val = self.target_model.predict(next_history)
 
         for i in range(self.batch_size):
             if done[i]:
-                target[i] = reward[i]
+                target[i][action[i]] = reward[i]
             else:
-                target[i] = reward[i] + self.DISC_RATE * np.argmax(target_val[i])
+                target[i][action[i]] = reward[i] + self.DISC_RATE * np.amax(target_val[i])
 
-        #loss의 학습을 어떻게 해야하는가??
-        loss = self.main_model.update(history, target_val)
+        loss = self.main_model.update(history, target)
+
 
     def get_action(self, history, global_step):
         epsilon = 1 - 0.9 / 999999 * (global_step - 1)
-        if random.random() < epsilon:
+        history = np.float32(history / 255.0)
+        if random.random() <= epsilon:
             action = self.env.action_space.sample()
+            return action
         else:
             action = self.main_model.predict(history)
-
-        #return action
-        return np.argmax(action)
+            return np.argmax(action)
 
     # Copy main DQN's args to target DQN
     def get_copy_var_ops(self, *, dest_scope_name: str, src_scope_name: str) -> List[tf.Operation]:
