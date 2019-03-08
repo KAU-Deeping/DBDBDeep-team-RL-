@@ -11,6 +11,7 @@ EPISODES = 500
 
 class SARSAAgent:
     def __init__(self, state_size, action_size, load_model):
+        self.load_model = load_model
         self.state_size = state_size
         self.action_size = action_size
 
@@ -23,6 +24,8 @@ class SARSAAgent:
 
         if self.load_model:
             self.model.load_weights('./save_model/deep_sarsa_trained.h5')
+            self.epsilon = 0.01
+            print("Model load completed")
 
     def build_model(self):
         model = Sequential()
@@ -71,12 +74,15 @@ if __name__ == "__main__":
         score = 0
         state = env.reset()
 
+
+
         while not done:
             env.render()
 
             action = agent.get_action(state)
             next_state, reward, done, _ = env.step(action)
 
+            state = next_state
             score += reward
-
-        print("Reward is ", reward)
+            if done:
+                print("Episode ", e, " Reward is ", score)
