@@ -87,7 +87,7 @@ if __name__ == "__main__":
             if done:
                 scores.append(score)
                 episodes.append(e)
-                pylab.plot(episodes, scores, 'b')
+                pylab.plot(episodes, scores, 'b', color='black')
                 pylab.savefig("./save_graph/deep-sarsa.png")
                 print("Episode : ", e, "Score : ", score, "Global Step : ", global_step)
 
