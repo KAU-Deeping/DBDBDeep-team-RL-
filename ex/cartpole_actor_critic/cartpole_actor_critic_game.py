@@ -25,35 +25,9 @@ class A2CAgent:
         self.actor_updater = self.actor_optimize()
         self.critic_updater = self.critic_optimize()
 
-        # For Tensorboard
-        self.avg_advantage = 0
-        self.avg_critic_loss = 0
-
-        self.sess = tf.InteractiveSession()
-        K.set_session(self.sess)
-
-        self.summary_placeholders, self.update_ops, self.summary_op = self.setup_summary()
-        self.summary_writer = tf.summary.FileWriter('summary/', self.sess.graph)
-        self.sess.run(tf.global_variables_initializer())
-
         if self.load_model:
             self.actor.load_weights('./save_model/A2C_trained_actor.h5')
             self.critic.load_weights('./save_model/A2C_trained_critic.h5')
-
-    def setup_summary(self):
-        episode_total_reward = tf.Variable(0.)
-        episode_avg_advantage = tf.Variable(0.)
-        episode_avg_critic_loss = tf.Variable(0.)
-
-        tf.summary.scalar('Total Reward/Episode', episode_total_reward)
-        tf.summary.scalar('Average Advantage/Episode', episode_avg_advantage)
-        tf.summary.scalar('Average Critic Loss/Episode', episode_avg_critic_loss)
-
-        summary_vars = [episode_total_reward, episode_avg_advantage, episode_avg_critic_loss]
-        summary_placeholders = [tf.placeholder(tf.float32) for _ in range(len(summary_vars))]
-        update_ops = [summary_vars[i].assign(summary_placeholders[i]) for i in range(len(summary_vars))]
-        summary_op = tf.summary.merge_all()
-        return summary_placeholders, update_ops, summary_op
 
     def build_actor(self):
         actor = Sequential()
@@ -118,7 +92,6 @@ class A2CAgent:
             advantage = reward + self.discount_rate * next_value - value
             target = reward + self.discount_rate * next_value
 
-        self.avg_advantage += advantage
         self.actor_updater([state, act, advantage])
         self.critic_updater([state, target])
 
@@ -131,6 +104,7 @@ if __name__ == '__main__':
         state = env.reset()
         done = False
         score = 0
+        step = 0
 
         while not done:
             action = agent.get_action(state)
@@ -141,6 +115,7 @@ if __name__ == '__main__':
 
             score += reward
             state = next_state
+            step += 1
 
             if done:
                 if score == 500:
