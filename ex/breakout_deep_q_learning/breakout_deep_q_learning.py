@@ -163,7 +163,7 @@ if __name__ == '__main__':
         step, score, start_life = 0, 0, 5
         observe = env.reset()
 
-        for _ in range(agent.no_op_steps):
+        for _ in range(random.randint(1, agent.no_op_steps)):
             observe, _, _, _ = env.step(1)
 
         state = pre_proc(observe)
