@@ -1,5 +1,3 @@
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 import gym
 import numpy as np
 import random
@@ -35,7 +33,12 @@ class A3CAgent:
 
         self.tmax = 5
 
-        self.sess = tf.InteractiveSession()
+        self.config = tf.ConfigProto(intra_op_parallelism_threads=16,
+                                inter_op_parallelism_threads=16,
+                                allow_soft_placement=True,
+                                device_count={'CPU': 1, 'GPU': 0})
+
+        self.sess = tf.InteractiveSession(config=self.config)
         K.set_session(self.sess)
         self.sess.run(tf.global_variables_initializer())
 
@@ -45,6 +48,7 @@ class A3CAgent:
             tf.summary.FileWriter('summary/breakout_a3c', self.sess.graph)
 
     def build_model(self):
+        #with tf.device("/cpu:0"):
         actor = Sequential()
         critic = Sequential()
 
@@ -273,6 +277,7 @@ class Agent(threading.Thread):
             self.states, self.actions, self.rewards = [], [], []
 
     def build_local_model(self):
+        #with tf.device("/cpu:0"):
         input = Input(shape=self.state_size)
         conv = Conv2D(16, (8, 8), strides=(4, 4), activation='relu')(input)
         conv = Conv2D(32, (4, 4), strides=(2, 2), activation='relu')(conv)
@@ -333,8 +338,8 @@ def pre_processing(next_observe, observe):
 
 if __name__ == "__main__":
     # For MacBook
-    global_agent = A3CAgent(action_size=3, thread_num=8)
+    #global_agent = A3CAgent(action_size=3, thread_num=8)
 
     # For Desktop
-    #global_agent = A3CAgent(action_size=3, thread_num=16)
+    global_agent = A3CAgent(action_size=3, thread_num=16)
     global_agent.train()
